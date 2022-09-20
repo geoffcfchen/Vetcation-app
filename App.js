@@ -1,8 +1,18 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import React from "react";
+import { useAssets } from "expo-asset";
+import { StyleSheet, Text, View, LogBox } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
+import ContextWrapper from "./context/ContextWrapper";
 
-export default function App() {
+LogBox.ignoreLogs([
+  "Setting a timer",
+  "AsyncStorage has been extracted from react-native core and will be removed in a future release.",
+]);
+
+const Stack = createStackNavigator();
+
+function App() {
   return (
     <View style={styles.container}>
       <Text>Open up App.js to start working on your app!</Text>
@@ -14,8 +24,27 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
+
+function Main() {
+  const [assets] = useAssets(
+    require("./assets/icon-square.png"),
+    require("./assets/chatbg.png"),
+    require("./assets/user-icon.png"),
+    require("./assets/welcome-img2.png")
+  );
+  if (!assets) {
+    return <Text>Loading ..</Text>;
+  }
+  return (
+    <ContextWrapper>
+      <App></App>
+    </ContextWrapper>
+  );
+}
+
+export default Main;
